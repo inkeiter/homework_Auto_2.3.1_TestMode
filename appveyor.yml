@@ -1,0 +1,24 @@
+image: Ubuntu2004  # образ для сборки
+
+stack: jdk 11  # версия JDK
+
+branches:
+  only:
+    - master  # ветка git
+
+build: off  # будем использовать свой скрипт сборки
+
+install:
+  # Запускаем SUT,
+  # имя файла SUT будет отличаться в каждой задаче.
+  # & означает, что в фоновом режиме не блокируем терминал для запуска тестов,
+  # обязательно должен быть для запуска SUT в CI
+  - java -jar ./artifacts/app-mbank.jar &
+  - chmod +x gradlew
+
+build_script:
+  # Запускаем автотесты
+  # Для проектов на базе Selenide необходимо добавить параметр для запуска браузера
+  # в headless режиме -Dselenide.headless=true, параметр --info должен остаться
+  - ./gradlew test --info
+  - chmod +x gradlew
