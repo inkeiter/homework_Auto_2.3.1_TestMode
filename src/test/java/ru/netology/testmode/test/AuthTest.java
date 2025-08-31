@@ -18,23 +18,6 @@ class AuthTest {
         open("http://localhost:9999");
     }
 
-//    @Test
-//    @DisplayName("Should successfully login with active registered user")
-//    void shouldSuccessfulLoginIfRegisteredActiveUser() {
-//        // 1. Регистрируем активного пользователя через API
-//        var registeredUser = DataGenerator.getRegisteredUser("active");
-//        System.out.println("Registered user: " + registeredUser.getLogin() + "/" + registeredUser.getPassword());
-//
-//        // 2. Заполняем форму данными из registeredUser
-//        $("[data-test-id=login] input").setValue(registeredUser.getLogin());
-//        $("[data-test-id=password] input").setValue(registeredUser.getPassword());
-//
-//        // 3. Нажимаем кнопку входа
-//        $("[data-test-id=action-login]").click();
-//
-//        // 4. Проверяем успешный вход
-//        $("[data-test-id=dashboard]").shouldBe(visible, Duration.ofSeconds(10));
-//    }
 @Test
 @DisplayName("Should successfully login with active registered user")
 void shouldSuccessfulLoginIfRegisteredActiveUser() {
