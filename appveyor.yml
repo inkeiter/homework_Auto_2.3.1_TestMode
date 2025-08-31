@@ -9,20 +9,14 @@ branches:
 build: off  # будем использовать свой скрипт сборки
 
 install:
-  # Запускаем SUT,
-  # имя файла SUT будет отличаться в каждой задаче.
-  # & означает, что в фоновом режиме не блокируем терминал для запуска тестов,
-  # обязательно должен быть для запуска SUT в CI
+  - chmod +x gradlew  # ДОЛЖНО БЫТЬ ПЕРВОЙ КОМАНДОЙ
+
+before_test:
   # Запускаем сервер в фоновом режиме
   - java -jar artifacts/app-ibank.jar -P:profile=test &
   - sleep 10  # ждем запуска сервера
   - curl -f http://localhost:9999 || exit 1  # проверяем что сервер запустился
-  - java -jar ./artifacts/app-mbank.jar &
-  - chmod +x gradlew
 
-build_script:
-  # Запускаем автотесты
-  # Для проектов на базе Selenide необходимо добавить параметр для запуска браузера
-  # в headless режиме -Dselenide.headless=true, параметр --info должен остаться
-  - ./gradlew test --info
-  - chmod +x gradlew
+test_script:
+  # Запускаем тесты в headless режиме
+  - ./gradlew test -Dselenide.headless=true --info
