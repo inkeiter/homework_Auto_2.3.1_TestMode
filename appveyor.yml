@@ -9,34 +9,14 @@ branches:
 build: off  # будем использовать свой скрипт сборки
 
 install:
-  - chmod +x gradlew
-  - ls -la artifacts/  # проверяем что jar файл существует
+  - chmod +x gradlew  # ДОЛЖНО БЫТЬ ПЕРВОЙ КОМАНДОЙ
 
 before_test:
-  # Диагностика перед запуском
-  - echo "=== ДИАГНОСТИКА ==="
-  - pwd
-  - ls -la
-  - echo "Jar file:"
-  - ls -la artifacts/
-  - echo "Java version:"
-  - java -version
-  - echo "=== ЗАПУСК СЕРВЕРА ==="
-
-  # Запускаем сервер с выводом логов в файл
-  - java -jar artifacts/app-ibank.jar -P:profile=test > server.log 2>&1 &
-  - sleep 15  # увеличиваем время ожидания
-
-  # Проверяем процессы
-  - echo "=== ПРОВЕРКА ПРОЦЕССОВ ==="
-  - ps aux | grep java || echo "Java процессов нет"
-  - echo "=== ПРОВЕРКА ПОРТОВ ==="
-  - netstat -tulpn | grep :99 || echo "Порт 9999 не занят"
-  - echo "=== ПРОВЕРКА СЕРВЕРА ==="
-  - curl -v http://localhost:9999 || wget -q --spider http://localhost:9999 || echo "Сервер не отвечает"
-  - echo "=== ЛОГИ СЕРВЕРА ==="
-  - cat server.log || echo "Логи недоступны"
+  # Запускаем сервер в фоновом режиме
+  - java -jar artifacts/app-ibank.jar -P:profile=test &
+  - sleep 10  # ждем запуска сервера
+  - curl -f http://localhost:9999 || exit 1  # проверяем что сервер запустился
 
 test_script:
-  - echo "=== ЗАПУСК ТЕСТОВ ==="
+  # Запускаем тесты в headless режиме
   - ./gradlew test -Dselenide.headless=true --info
