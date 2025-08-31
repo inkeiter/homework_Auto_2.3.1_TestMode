@@ -13,6 +13,10 @@ install:
   # имя файла SUT будет отличаться в каждой задаче.
   # & означает, что в фоновом режиме не блокируем терминал для запуска тестов,
   # обязательно должен быть для запуска SUT в CI
+  # Запускаем сервер в фоновом режиме
+  - java -jar artifacts/app-ibank.jar -P:profile=test &
+  - sleep 10  # ждем запуска сервера
+  - curl -f http://localhost:9999 || exit 1  # проверяем что сервер запустился
   - java -jar ./artifacts/app-mbank.jar &
   - chmod +x gradlew
 
